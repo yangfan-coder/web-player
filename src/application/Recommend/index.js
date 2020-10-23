@@ -5,6 +5,7 @@ import Slider from '../../components/slider'
 import * as actionTypes from './store/actionCreators';
 import RecommendList from '../../components/list'
 import Scroll from '../../baseUI/scroll'
+import Loading from '../../baseUI/loading';
 import {Content} from './style'
 
 function Recommend(props) {
@@ -36,6 +37,7 @@ function Recommend(props) {
           <RecommendList recommendList={recommendListJS} />
         </div>
       </Scroll>
+      { enterLoading ? <Loading></Loading> : null }
     </Content>
   )
 }
@@ -44,6 +46,7 @@ function Recommend(props) {
   return {
     bannerList: state.getIn (['recommend', 'bannerList']),
     recommendList: state.getIn (['recommend', 'recommendList']),
+    enterLoading: state.getIn(['recommend', 'enterLoading'])//简单数据类型不需要调用toJS
   }
 }
 
