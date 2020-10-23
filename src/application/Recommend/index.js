@@ -1,16 +1,60 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import {forceCheck} from 'react-lazyload';
+import { connect } from "react-redux";
 import Slider from '../../components/slider'
-
-const bannerList = [1,2,3,4].map(item => {
-  return {imageUrl:"http://p1.music.126.net/ZYLJ2oZn74yUz5x8NBGkVA==/109951164331219056.jpg"}
-})
+import * as actionTypes from './store/actionCreators';
+import RecommendList from '../../components/list'
+import Scroll from '../../baseUI/scroll'
+import {Content} from './style'
 
 function Recommend(props) {
+  
+
+  const {bannerList, recommendList, enterLoading} = props
+
+  const {getBannerDataDispatch, getRecommendListDataDispatch} = props
+
+
+  useEffect(() => {
+    if(!bannerList.size) {
+      getBannerDataDispatch()
+    }
+    
+    if(!recommendList.size){
+      getRecommendListDataDispatch();
+    }
+  }, [])
+
+  const bannerListJS = bannerList ? bannerList.toJS() : []; 
+  const recommendListJS = recommendList ? recommendList.toJS() :[];
+
   return  (
-    <div>
-      <Slider bannerList={bannerList}/>
-    </div>
+    <Content>
+      <Scroll onScroll={forceCheck}>
+        <div>
+          <Slider bannerList={bannerListJS}/>
+          <RecommendList recommendList={recommendListJS} />
+        </div>
+      </Scroll>
+    </Content>
   )
 }
 
-export default React.memo(Recommend);
+ const mapStateToProps = (state) => {
+  return {
+    bannerList: state.getIn (['recommend', 'bannerList']),
+    recommendList: state.getIn (['recommend', 'recommendList']),
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getBannerDataDispatch () {
+      dispatch (actionTypes.getBannerList ());
+    },
+    getRecommendListDataDispatch () {
+      dispatch (actionTypes.getRecommendList ());
+    },
+  }
+}
+export default connect (mapStateToProps, mapDispatchToProps)(React.memo (Recommend));
