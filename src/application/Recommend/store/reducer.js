@@ -1,11 +1,12 @@
 import * as actionTypes from './constants';
+// https://www.jianshu.com/p/5718c917d701
 import { fromJS } from 'immutable';
 
 const defaultState = fromJS({
   bannerList: [],
   recommendList: [],
   enterLoading: true
-});
+});    
 
 export default (state = defaultState, action) => {
   switch(action.type) {
