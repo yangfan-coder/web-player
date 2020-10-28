@@ -4,6 +4,8 @@ import Horizen from '../../baseUI/horizen-item'
 import Scroll from '../../baseUI/scroll'
 import { categoryTypes, alphaTypes } from '../../api/config'
 import { NavContainer, List, ListItem,ListContainer } from './style'
+import Loading from '../../baseUI/loading'
+import LazyLoad, {forceCheck} from 'react-lazyload'; 
 import { 
   getSingerList, 
   getHotSingerList, 
@@ -14,6 +16,7 @@ import {
   changePullDownLoading, 
   refreshMoreHotSingerList 
 } from './store/actionCreators';
+
 
 
 const singerList = [1, 2,3, 4,5,6,7,8,9,10,11,12].map (item => {
@@ -32,7 +35,9 @@ const RenderSingerList = () => {
           return (
             <ListItem key={`${item.accountId}${index}`}>
               <div className='img_wrapper'>
-                <img src={`${item.picUrl}?param=300x300`} width='100%' height='100%' alt='music'/>
+                <LazyLoad placeholder={<img width="100%" height="100%" src={require('./singer.png')} alt="music"/>}>
+                  <img src={`${item.picUrl}?param=300x300`} width='100%' height='100%' alt='music'/>
+                </LazyLoad>
               </div>
               <span className='name'>{item.name}</span>
             </ListItem>
@@ -60,6 +65,15 @@ function Singers(props) {
     updateDispatch(val, alpha);
   }
 
+  const handlePullUp = () => {
+    pullUpRefreshDispatch(category, alpha, category === '', pageCount)
+
+  }
+
+  const handlePullDown = () => {
+    pullDownRefreshDispatch (category, alpha);
+  };
+
   return  (
     <div>
       <NavContainer>
@@ -77,9 +91,16 @@ function Singers(props) {
         />
       </NavContainer>
       <ListContainer>
-        <Scroll>
+        <Scroll
+          pullUp = { handlePullUp }
+          pullDown = { handlePullDown }
+          pullUpLoading = { pullUpLoading }
+          pullDownLoading = { pullDownLoading }
+          onScroll = {forceCheck}
+        >
           { RenderSingerList() }
         </Scroll>
+        <Loading show={enterLoading}></Loading>
       </ListContainer>
     </div>
   )

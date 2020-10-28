@@ -12,8 +12,6 @@ const defaultState = fromJS({
 
 
 export default (state = defaultState, action) => {
-  console.log(action)
-  console.log('11111111')
   switch(action.type) {
     case actionTypes.CHANGE_SINGER_LIST:
       return state.set('singerList', action.data);
