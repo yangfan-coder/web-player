@@ -18,42 +18,16 @@ import {
 } from './store/actionCreators';
 
 
-
-const singerList = [1, 2,3, 4,5,6,7,8,9,10,11,12].map (item => {
-  return {
-    picUrl: "https://p2.music.126.net/uTwOm8AEFFX_BYHvfvFcmQ==/109951164232057952.jpg",
-    name: "隔壁老樊",
-    accountId: 277313426,
-  }
-}); 
-
-const RenderSingerList = () => {
-  return (
-    <List>
-      {
-        singerList.map( (item, index ) => {
-          return (
-            <ListItem key={`${item.accountId}${index}`}>
-              <div className='img_wrapper'>
-                <LazyLoad placeholder={<img width="100%" height="100%" src={require('./singer.png')} alt="music"/>}>
-                  <img src={`${item.picUrl}?param=300x300`} width='100%' height='100%' alt='music'/>
-                </LazyLoad>
-              </div>
-              <span className='name'>{item.name}</span>
-            </ListItem>
-          ) 
-        })
-      }
-    </List>
-  )
-}
-
 function Singers(props) {
   let [category, setCategory] = useState('');
   let [alpha, setAlpha] = useState('');
 
   const {singerList, enterLoading, pullUpLoading, pullDownLoading, pageCount} = props
   const {getHotSingerDispatch, updateDispatch, pullUpRefreshDispatch, pullDownRefreshDispatch} = props
+
+  useEffect(() => {
+    getHotSingerDispatch();
+  }, []);
 
   let handleUpdateAlpha = (val) => {
     setAlpha(val)
@@ -74,6 +48,28 @@ function Singers(props) {
     pullDownRefreshDispatch (category, alpha);
   };
 
+  const RenderSingerList = () => {
+    const list = singerList ? singerList.toJS() : []
+    return (
+      <List>
+        {
+          list.map((item, index ) => {
+            return (
+              <ListItem key={`${item.accountId}${index}`}>
+                <div className='img_wrapper'>
+                  <LazyLoad placeholder={<img width="100%" height="100%" src={require('./singer.png')} alt="music"/>}>
+                    <img src={`${item.picUrl}?param=300x300`} width='100%' height='100%' alt='music'/>
+                  </LazyLoad>
+                </div>
+                <span className='name'>{item.name}</span>
+              </ListItem>
+            ) 
+          })
+        }
+      </List>
+    )
+  };
+
   return  (
     <div>
       <NavContainer>
@@ -81,13 +77,13 @@ function Singers(props) {
           list={categoryTypes} 
           title={"分类 （默认热门）：" }
           oldVal={category} 
-          handleClick={handleUpdateCatetory}
+          handleClick={(val) => handleUpdateCatetory(val)}
         />
         <Horizen 
           list={alphaTypes} 
           title={"首字母：" } 
           oldVal={alpha} 
-          handleClick={handleUpdateAlpha}
+          handleClick={(val) => handleUpdateAlpha(val)}
         />
       </NavContainer>
       <ListContainer>
