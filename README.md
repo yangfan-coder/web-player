@@ -22,7 +22,7 @@
 
 ## 效果图预览
 
-<img src="https://github.com/yangfan-coder/web-player/tree/master/src/assets/images/music.gif" height="400px"/><br />
+<img src="https://github.com/yangfan-coder/web-player/blob/master/src/assets/images/music.gif" width="375px" height="667px"/><br />
 
 ---
 
