@@ -1,5 +1,5 @@
-import {fromJS} from 'immutable'
-import { getRankListRequest } from '../../../api/request'
+import { fromJS } from 'immutable';
+import { getRankListRequest } from '../../../api/request';
 
 // constants
 export const CHANGE_RANK_LIST = 'home/rank/CHANGE_RANK_LIST';
@@ -8,44 +8,42 @@ export const CHANGE_LOADING = 'home/rank/CHANGE_LOADING';
 // actionCrreator
 
 const changeRankList = (data) => ({
-  type:CHANGE_RANK_LIST,
-  data:fromJS(data)
-})
+  type: CHANGE_RANK_LIST,
+  data: fromJS(data),
+});
 
 const changeLoading = (data) => ({
-  type:CHANGE_LOADING,
-  data
-})
-
+  type: CHANGE_LOADING,
+  data,
+});
 
 export const getRankList = () => {
-  return dispatch => {
-    getRankListRequest().then(data => {
+  return (dispatch) => {
+    getRankListRequest().then((data) => {
       let list = data && data.list;
 
-      dispatch(changeRankList(list))
-      dispatch(changeLoading(false))
-    })
-  }
-}
-
+      dispatch(changeRankList(list));
+      dispatch(changeLoading(false));
+    });
+  };
+};
 
 // reducer
 
 const defaultState = fromJS({
   rankList: [],
-  loading: true
-})
+  loading: true,
+});
 
 const reducer = (state = defaultState, action) => {
-  switch (action.type ) {
+  switch (action.type) {
     case CHANGE_RANK_LIST:
-      return action.set('rankList', action.data);
+      return state.set('rankList', action.data);
     case CHANGE_LOADING:
       return state.set('loading', action.data);
     default:
       return state;
   }
-}
+};
 
-export {reducer}
+export { reducer };
